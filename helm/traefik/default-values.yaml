@@ -1,0 +1,38 @@
+deployment:
+  podAnnotations:
+    prometheus.io/port: "8082"
+    prometheus.io/scrape: "true"
+
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: true
+
+priorityClassName: "system-cluster-critical"
+
+tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Exists"
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+service:
+  ipFamilyPolicy: "PreferDualStack"
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: le.speckled964@passmail.net
+      storage: /data/acme.json
+      httpChallenge:
+        entryPoint: web  

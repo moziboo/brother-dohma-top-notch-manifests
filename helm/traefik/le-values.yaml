@@ -1,0 +1,19 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: le.speckled964@passmail.net
+      storage: /data/acme.json
+      httpChallenge:
+        entryPoint: web
+
+volumes:
+  - name: data
+    hostPath:
+      path: /mnt/dohma-party-volume-01/traefik
+      type: DirectoryOrCreate
