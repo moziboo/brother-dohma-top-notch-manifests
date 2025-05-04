@@ -1,0 +1,5 @@
+volumes:
+  - name: data
+    hostPath:
+      path: /mnt/dohma-party-volume-01/traefik
+      type: DirectoryOrCreate
