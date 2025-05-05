@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: mmmelton.com
+    - host: httpbin.mmmelton.com
       http:
         paths:
           - path: /
@@ -20,5 +20,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - mmmelton.com
+        - httpbin.mmmelton.com
 

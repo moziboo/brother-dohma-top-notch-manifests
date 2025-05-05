@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shiori
+spec:
+  selector:
+    app: shiori
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shiori
+  labels:
+    app: shiori
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shiori
+  template:
+    metadata:
+      labels:
+        app: shiori
+    spec:
+      volumes:
+      - name: app
+        hostPath:
+          path: /mnt/dohma_party_volume_01/shiori
+      - name: tmp
+        emptyDir:
+          medium: Memory
+      containers:
+      - name: shiori
+        image: ghcr.io/go-shiori/shiori:latest
+        command: ["/usr/bin/shiori", "serve"]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SHIORI_DIR
+          value: /srv/shiori
+        volumeMounts:
+        - mountPath: /srv/shiori
+          name: app
+        - mountPath: /tmp
+          name: tmp
