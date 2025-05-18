@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: memos
+spec:
+  selector:
+    app: memos
+  ports:
+    - port: 5230
+      targetPort: 5230
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memos
+  labels:
+    app: memos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memos
+  template:
+    metadata:
+      labels:
+        app: memos
+    spec:
+      volumes:
+      - name: memos-data
+        hostPath:
+          path: /mnt/dohma_party_volume_01/memos # This path should exist on your node
+          type: DirectoryOrCreate # Ensure the directory is created if it doesn't exist
+      containers:
+      - name: memos
+        image: neosmemo/memos:stable
+        ports:
+        - containerPort: 5230
+        env:
+        - name: MEMOS_PORT
+          value: "5230"
+        volumeMounts:
+        - mountPath: /var/opt/memos # This is the path inside the memos container
+          name: memos-data 
